@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Application</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .quiz-container {
+            max-width: 800px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .question-count {
+            height: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .timer {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .option-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .option-item.selected {
+            transform: translateY(-2px);
+        }
+        
+        .correct-answer {
+            animation: correctFlash 1s;
+        }
+        
+        @keyframes correctFlash {
+            0% { background-color: #4ade80; }
+            100% { background-color: #ffffff; }
+        }
+        
+        .incorrect-answer {
+            animation: incorrectFlash 1s;
+        }
+        
+        @keyframes incorrectFlash {
+            0% { background-color: #f87171; }
+            100% { background-color: #ffffff; }
+        }
+        
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+        }
+        
+        .progress-dot.active {
+            animation: dotPulse 1.5s infinite;
+        }
+        
+        @keyframes dotPulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="quiz-container w-full bg-white rounded-xl overflow-hidden">
+        <!-- Quiz Header -->
+        <div class="p-6 bg-indigo-600 text-white">
+            <h1 class="text-2xl font-bold">Interactive Quiz</h1>
+            <div class="flex justify-between items-center mt-4">
+                <div class="flex space-x-2" id="progressDots"></div>
+                <div id="timer" class="timer px-3 py-1 bg-white text-indigo-600 rounded-full font-semibold">30s</div>
+            </div>
+            <div class="mt-2 w-full bg-gray-200 rounded-full h-2">
+                <div id="questionProgress" class="question-count bg-yellow-300 h-2 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+        
+        <!-- Quiz Content -->
+        <div class="p-6" id="quizContent">
+            <!-- Question will be inserted here -->
+        </div>
+        
+        <!-- Quiz Controls -->
+        <div class="p-6 border-t border-gray-200 flex justify-between">
+            <button id="prevBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition disabled:opacity-50">Previous</button>
+            <button id="nextBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Next Question</button>
+            <button id="submitBtn" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition hidden">Submit Quiz</button>
+        </div>
+    </div>
+    
+    <!-- Results Modal -->
+    <div id="resultsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto m-4">
+            <div class="p-6 bg-green-600 text-white">
+                <h2 class="text-xl font-bold">Quiz Results</h2>
+                <p>You scored <span id="scoreDisplay">0</span> out of <span id="totalQuestionsDisplay">0</span>!</p>
+            </div>
+            
+            <div class="p-6 space-y-4" id="resultsContent">
+                <!-- Results will be inserted here -->
+            </div>
+            
+            <div class="p-6 border-t border-gray-200 flex justify-end">
+                <button id="closeModal" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Quiz Data
+        const quizData = [
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                correctAnswer: 1,
+                explanation: "Mars is often called the 'Red Planet' because iron minerals in the Martian soil oxidize, or rust, causing the soil and atmosphere to look red."
+            },
+            {
+                question: "What is the largest ocean on Earth?",
+                options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+                correctAnswer: 3,
+                explanation: "The Pacific Ocean is the largest and deepest of Earth's oceanic divisions, covering about 46% of Earth's water surface."
+            },
+            {
+                question: "Which element has the chemical symbol 'O'?",
+                options: ["Gold", "Oxygen", "Osmium", "Oganesson"],
+                correctAnswer: 1,
+                explanation: "Oxygen is a chemical element with symbol O and atomic number 8. It's essential for most living organisms."
+            },
+            {
+                question: "Who painted the Mona Lisa?",
+                options: ["Pablo Picasso", "Vincent van Gogh", "Leonardo da Vinci", "Michelangelo"],
+                correctAnswer: 2,
+                explanation: "The Mona Lisa was painted by Leonardo da Vinci between 1503 and 1519 and is considered an archetypal masterpiece of the Italian Renaissance."
+            },
+            {
+                question: "What is the capital of Japan?",
+                options: ["Beijing", "Seoul", "Tokyo", "Bangkok"],
+                correctAnswer: 2,
+                explanation: "Tokyo is the capital of Japan and one of the most populous cities in the world with a population of over 14 million people."
+            }
+        ];
+        
+        // Quiz State
+        let currentQuestion = 0;
+        let userAnswers = Array(quizData.length).fill(null);
+        let timer;
+        let timeLeft = 30;
+        
+        // DOM Elements
+        const quizContent = document.getElementById('quizContent');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const timerElement = document.getElementById('timer');
+        const questionProgress = document.getElementById('questionProgress');
+        const progressDots = document.getElementById('progressDots');
+        const resultsModal = document.getElementById('resultsModal');
+        const resultsContent = document.getElementById('resultsContent');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const totalQuestionsDisplay = document.getElementById('totalQuestionsDisplay');
+        const closeModal = document.getElementById('closeModal');
+        
+        // Initialize Quiz
+        function initQuiz() {
+            renderQuestion();
+            renderProgressDots();
+            
+            prevBtn.disabled = true;
+            prevBtn.addEventListener('click', goToPreviousQuestion);
+            nextBtn.addEventListener('click', goToNextQuestion);
+            submitBtn.addEventListener('click', showResults);
+            closeModal.addEventListener('click', () => resultsModal.classList.add('hidden'));
+            
+            startTimer();
+        }
+        
+        // Render Current Question
+        function renderQuestion() {
+            const question = quizData[currentQuestion];
+            
+            let optionsHTML = question.options.map((option, index) => {
+                const isSelected = userAnswers[currentQuestion] === index;
+                return `
+                    <div class="option-item ${isSelected ? 'selected bg-indigo-100 border-indigo-300' : 'bg-gray-50 border-gray-200'} 
+                        mb-3 p-3 border rounded-lg cursor-pointer transition hover:shadow-md"
+                        onclick="selectOption(${index})">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-5 w-5 rounded-full border ${isSelected ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-gray-300'} 
+                                flex items-center justify-center mr-3">
+                                ${isSelected ? '✓' : ''}
+                            </div>
+                            <div>${option}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            quizContent.innerHTML = `
+                <h2 class="text-xl font-semibold mb-6">${question.question}</h2>
+                <div class="options-container">${optionsHTML}</div>
+            `;
+            
+            // Update buttons visibility
+            nextBtn.style.display = currentQuestion === quizData.length - 1 ? 'none' : 'block';
+            submitBtn.style.display = currentQuestion === quizData.length - 1 ? 'block' : 'none';
+            
+            // Update progress
+            questionProgress.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+            updateProgressDots();
+        }
+        
+        // Render Progress Dots
+        function renderProgressDots() {
+            progressDots.innerHTML = '';
+            quizData.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = `progress-dot rounded-full ${index === currentQuestion ? 'bg-yellow-300 active' : 
+                                index < currentQuestion ? 'bg-green-500' : 'bg-gray-300'}`;
+                progressDots.appendChild(dot);
+            });
+        }
+        
+        // Update Progress Dots
+        function updateProgressDots() {
+            const dots = progressDots.querySelectorAll('.progress-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active', 'bg-yellow-300', 'bg-green-500', 'bg-gray-300');
+                if (index === currentQuestion) {
+                    dot.classList.add('bg-yellow-300', 'active');
+                } else if (index < currentQuestion) {
+                    dot.classList.add('bg-green-500');
+                } else {
+                    dot.classList.add('bg-gray-300');
+                }
+            });
+        }
+        
+        // Select Option
+        window.selectOption = function(index) {
+            userAnswers[currentQuestion] = index;
+            renderQuestion();
+        };
+        
+        // Start Timer
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 30;
+            updateTimerDisplay();
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    goToNextQuestion();
+                }
+                if (timeLeft <= 10) {
+                    timerElement.classList.add('bg-red-500', 'text-white');
+                    timerElement.classList.remove('bg-white', 'text-indigo-600');
+                }
+            }, 1000);
+        }
+        
+        // Update Timer Display
+        function updateTimerDisplay() {
+            timerElement.textContent = `${timeLeft}s`;
+        }
+        
+        // Go to Previous Question
+        function goToPreviousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+                prevBtn.disabled = currentQuestion === 0;
+                startTimer();
+            }
+        }
+        
+        // Go to Next Question
+        function goToNextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+                prevBtn.disabled = false;
+                startTimer();
+            }
+        }
+        
+        // Show Results
+        function showResults() {
+            clearInterval(timer);
+            
+            // Calculate score
+            const score = userAnswers.reduce((acc, answer, index) => {
+                return acc + (answer === quizData[index].correctAnswer ? 1 : 0);
+            }, 0);
+            
+            // Display score
+            scoreDisplay.textContent = score;
+            totalQuestionsDisplay.textContent = quizData.length;
+            
+            // Create review content
+            let reviewHTML = '';
+            quizData.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === question.correctAnswer;
+                
+                reviewHTML += `
+                    <div class="question-review ${isCorrect ? 'correct-answer' : 'incorrect-answer'} p-3 border rounded-lg mb-4">
+                        <div class="font-semibold mb-2">${question.question}</div>
+                        <div class="mb-1">Your answer: <span class="font-medium">${userAnswer !== null ? question.options[userAnswer] : 'Not answered'}</span></div>
+                        <div class="mb-1">Correct answer: <span class="font-medium">${question.options[question.correctAnswer]}</span></div>
+                        <div class="text-sm text-gray-600 mt-2">${question.explanation}</div>
+                    </div>
+                `;
+            });
+            
+            resultsContent.innerHTML = reviewHTML;
+            resultsModal.classList.remove('hidden');
+        }
+        
+        // Initialize the quiz
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
