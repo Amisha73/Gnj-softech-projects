@@ -1,73 +1,149 @@
-<!-- Task 1: CSS Styling Challenge
-Take your recipe webpage and apply a cohesive color 
-scheme and typography. Use CSS to style elements consistently throughout the page. -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Recipe Website page</title>
+    <title>Delicious Pasta Recipe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        color: #333;
+      /* Reset and base styles */
+      * {
+        box-sizing: border-box;
         margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
         padding: 20px;
+        overflow-x: hidden;
       }
-
+      .container {
+        background: white;
+        max-width: 600px;
+        width: 100%;
+        border-radius: 15px;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        padding: 30px 40px;
+        animation: fadeIn 1s ease forwards;
+      }
       h1 {
-        color: #2c3e50;
         text-align: center;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        animation: slideDown 1s ease forwards;
       }
-
       img {
         display: block;
-        margin: 0 auto 20px;
-        width: 300px;
-        height: auto;
-        border-radius: 8px;
+        margin: 0 auto 30px;
+        width: 100%;
+        max-width: 400px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(44, 62, 80, 0.3);
+        animation: zoomIn 1s ease forwards;
       }
-
       p {
-        line-height: 1.6;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        color: #34495e;
       }
-
-      ul {
-        list-style-type: square;
+      ul, ol {
         padding-left: 20px;
-      }
-
-      ol {
-        padding-left: 20px;
+        margin-bottom: 30px;
+        color: #555;
       }
       li {
-        margin-bottom: 10px;
+        margin-bottom: 12px;
+        font-size: 1rem;
+        line-height: 1.5;
+        position: relative;
+        cursor: default;
+        transition: color 0.3s ease;
+        animation: fadeInUp 0.8s ease forwards;
+      }
+      li:hover {
+        color: #e67e22;
+      }
+      /* Animations */
+      @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes zoomIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Responsive */
+      @media (max-width: 640px) {
+        .container {
+          padding: 20px;
+        }
+        h1 {
+          font-size: 2rem;
+        }
+        img {
+          max-width: 100%;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Delicious Pasta Recipe</h1>
-    <img src="https://prolicious.com/cdn/shop/articles/High_Protein_Macaroni_Pasta.jpg?v=1705298076" alt="pasta image" />
-
-    <p>Ingredients:</p>
-    <ul>
-      <li>200g pasta</li>
-      <li>2 tablespoons olive oil</li>
-      <li>3 cloves garlic, minced</li>
-      <li>1 can diced tomatoes</li>
-      <li>Salt and pepper to taste</li>
-      <li>Fresh basil leaves</li>
-    </ul>
-    <p>Instructions:</p>
-    <ol>
-      <li>Boil water in a large pot.</li>
-      <li>Add pasta and cook according to package instructions.</li>
-      <li>In a pan, heat olive oil over medium heat.</li>
-      <li>Add minced garlic and sauté until fragrant.</li>
-      <li>Add diced tomatoes, salt, and pepper. Cook for 5 minutes.</li>
-      <li>Drain pasta and add it to the sauce. Mix well.</li>
-      <li>Serve hot, garnished with fresh basil leaves.</li>
-    </ol>
+    <div class="container">
+      <h1>Delicious Pasta Recipe</h1>
+      <img src="https://prolicious.com/cdn/shop/articles/High_Protein_Macaroni_Pasta.jpg?v=1705298076" alt="pasta image" />
+      <p>Ingredients:</p>
+      <ul>
+        <li>200g pasta</li>
+        <li>2 tablespoons olive oil</li>
+        <li>3 cloves garlic, minced</li>
+        <li>1 can diced tomatoes</li>
+        <li>Salt and pepper to taste</li>
+        <li>Fresh basil leaves</li>
+      </ul>
+      <p>Instructions:</p>
+      <ol>
+        <li>Boil water in a large pot.</li>
+        <li>Add pasta and cook according to package instructions.</li>
+        <li>In a pan, heat olive oil over medium heat.</li>
+        <li>Add minced garlic and sauté until fragrant.</li>
+        <li>Add diced tomatoes, salt, and pepper. Cook for 5 minutes.</li>
+        <li>Drain pasta and add it to the sauce. Mix well.</li>
+        <li>Serve hot, garnished with fresh basil leaves.</li>
+      </ol>
+    </div>
   </body>
 </html>
