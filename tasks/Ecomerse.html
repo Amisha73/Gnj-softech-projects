@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern E-commerce</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #3182ce;
+            --secondary: #4fd1c5;
+            --dark: #2d3748;
+            --light: #f7fafc;
+        }
+        
+        .product-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .cart-item {
+            transition: all 0.2s;
+        }
+        
+        .cart-item:hover {
+            background: rgba(66, 153, 225, 0.05);
+        }
+        
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5b74d502-64ee-418b-899f-446ae16e19a0.png" alt="Modern e-commerce store logo showing a shopping bag with abstract geometric design" class="h-10 w-10 rounded-full">
+                <h1 class="text-xl font-bold text-gray-800">ShopSphere</h1>
+            </div>
+            
+            <div class="relative">
+                <button id="cart-toggle" class="flex items-center space-x-1 text-gray-700 hover:text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span id="cart-count" class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">0</span>
+                </button>
+                
+                <div id="cart-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-md shadow-xl z-20 border border-gray-200">
+                    <div class="p-4 border-b">
+                        <h3 class="text-lg font-semibold">Shopping Cart</h3>
+                    </div>
+                    <div id="cart-items" class="max-h-96 overflow-y-auto p-2">
+                        <div class="text-center py-4 text-gray-500">Your cart is empty</div>
+                    </div>
+                    <div id="cart-total" class="p-4 border-t flex justify-between font-bold text-gray-800">
+                        <span>Total:</span>
+                        <span>$0.00</span>
+                    </div>
+                    <div class="p-4 border-t">
+                        <button class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">Checkout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-blue-500 to-teal-400 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Summer Collection</h2>
+            <p class="text-blue-100 max-w-2xl mx-auto mb-6">Discover our premium selection of products with exclusive summer discounts</p>
+            <button class="bg-white text-blue-600 px-6 py-2 rounded-full font-medium hover:bg-gray-100 transition">Shop Now</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Featured Categories -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Shop by Category</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="#" class="category-card bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/36817aa7-2425-44d7-a392-6d8b7f26f6fb.png" alt="Minimalist white electronics including smartphones and headphones on wooden surface" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-800">Electronics</h3>
+                    </div>
+                </a>
+                <a href="#" class="category-card bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e377d239-0990-4535-a208-13ba586c495f.png" alt="Stylish men's and women's fashion accessories laid out on clean white background" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-800">Fashion</h3>
+                    </div>
+                </a>
+                <a href="#" class="category-card bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/177a11c9-c0dd-4f40-9e5e-a664beabed98.png" alt="Minimalist home decor items including ceramic vases and candles on wooden shelf" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-800">Home Decor</h3>
+                    </div>
+                </a>
+                <a href="#" class="category-card bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/43357ffa-43ce-4568-8740-3a62a0a0a9ed.png" alt="Healthy groceries including fresh fruits, vegetables, and organic products arranged neatly" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-800">Groceries</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Featured Products</h2>
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Product 1 -->
+            <div class="product-card bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                <div class="relative">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/86083e4b-e68c-438a-8fc9-56e6bb413b5f.png" alt="Premium wireless headphones with sleek black design and silver accents on white background" class="w-full h-48 object-cover">
+                    <span class="absolute top-2 right-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded-full">NEW</span>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">Wireless Headphones</h3>
+                    <p class="text-gray-600 text-sm mb-3">Premium sound quality with noise cancellation</p>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-gray-900">$199.99</span>
+                        <button class="add-to-cart bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm" data-id="1" data-name="Wireless Headphones" data-price="199.99">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                <div class="relative">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a0a497b0-10b4-4a2e-a71b-4416f6e841fd.png" alt="Sleek silver smartwatch with fitness tracking capabilities displayed on wooden stand" class="w-full h-48 object-cover">
+                    <span class="absolute top-2 right-2 bg-red-500 text-xs text-white font-bold px-2 py-1 rounded-full">SALE</span>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">Smart Watch</h3>
+                    <p class="text-gray-600 text-sm mb-3">Fitness tracking & heart rate monitor</p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="font-bold text-gray-900">$179.99</span>
+                            <span class="text-xs text-gray-400 line-through ml-1">$229.99</span>
+                        </div>
+                        <button class="add-to-cart bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm" data-id="2" data-name="Smart Watch" data-price="179.99">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3f23b278-a7d0-4bb7-a726-fc2588d64b47.png" alt="Modern laptop with ultra-thin bezels and backlit keyboard displayed at an angle" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">Ultrabook Laptop</h3>
+                    <p class="text-gray-600 text-sm mb-3">Lightweight and powerful for professionals</p>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-gray-900">$899.99</span>
+                        <button class="add-to-cart bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm" data-id="3" data-name="Ultrabook Laptop" data-price="899.99">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                <div class="relative">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/99facd9e-b695-418c-a74a-168152bcc4a2.png" alt="Compact bluetooth speaker with water resistant design in soft blue color" class="w-full h-48 object-cover">
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">Bluetooth Speaker</h3>
+                    <p class="text-gray-600 text-sm mb-3">Portable and waterproof design</p>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-gray-900">$89.99</span>
+                        <button class="add-to-cart bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm" data-id="4" data-name="Bluetooth Speaker" data-price="89.99">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4">ShopSphere</h3>
+                    <p class="text-gray-400">Your one-stop shop for all your needs with premium quality products.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Products</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Customer Service</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Shipping</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Returns</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Us</h3>
+                    <p class="text-gray-400 mb-2">123 Shop Street, Commerce City</p>
+                    <p class="text-gray-400 mb-2">Email: info@shopsphere.com</p>
+                    <p class="text-gray-400 mb-4">Phone: (123) 456-7890</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/169893af-ebce-4ce6-9b0a-d951cb692f60.png" alt="Facebook social media icon" class="h-6 w-6">
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d7a9b1df-3a15-4a03-81e8-846649c634b6.png" alt="Twitter social media icon" class="h-6 w-6">
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8e653ba1-a4c8-475e-b9b4-60fa47244484.png" alt="Instagram social media icon" class="h-6 w-6">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2023 ShopSphere. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let cart = [];
+            const cartToggle = document.getElementById('cart-toggle');
+            const cartDropdown = document.getElementById('cart-dropdown');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+            
+            // Toggle cart dropdown
+            cartToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                cartDropdown.classList.toggle('hidden');
+            });
+            
+            // Close cart when clicking outside
+            document.addEventListener('click', function() {
+                cartDropdown.classList.add('hidden');
+            });
+            
+            // Prevent cart from closing when clicking inside
+            cartDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Add to cart functionality
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    const price = parseFloat(this.getAttribute('data-price'));
+                    
+                    // Check if item already in cart
+                    const existingItem = cart.find(item => item.id === id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        cart.push({
+                            id,
+                            name,
+                            price,
+                            quantity: 1
+                        });
+                    }
+                    
+                    updateCart();
+                    
+                    // Visual feedback
+                    this.textContent = 'Added!';
+                    this.classList.add('bg-green-500');
+                    setTimeout(() => {
+                        this.textContent = 'Add to Cart';
+                        this.classList.remove('bg-green-500');
+                    }, 1000);
+                });
+            });
+            
+            // Update cart display
+            function updateCart() {
+                // Update cart count
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartCount.textContent = totalItems;
+                
+                // Update cart items list
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = '<div class="text-center py-4 text-gray-500">Your cart is empty</div>';
+                } else {
+                    cartItemsContainer.innerHTML = cart.map(item => `
+                        <div class="cart-item p-3 flex justify-between items-center border-b">
+                            <div class="w-32 truncate">${item.name}</div>
+                            <div class="flex items-center space-x-4">
+                                <div class="quantity-controls flex items-center">
+                                    <button class="decrease-item text-gray-500 hover:text-red-500" data-id="${item.id}">-</button>
+                                    <span class="quantity mx-2">${item.quantity}</span>
+                                    <button class="increase-item text-gray-500 hover:text-green-500" data-id="${item.id}">+</button>
+                                </div>
+                                <div class="item-price w-20 text-right">$${(item.price * item.quantity).toFixed(2)}</div>
+                                <button class="remove-item text-red-500 hover:text-red-700" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    // Add event listeners for dynamic elements
+                    document.querySelectorAll('.remove-item').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            cart = cart.filter(item => item.id !== id);
+                            updateCart();
+                        });
+                    });
+                    
+                    document.querySelectorAll('.increase-item').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            const item = cart.find(item => item.id === id);
+                            if (item) {
+                                item.quantity += 1;
+                                updateCart();
+                            }
+                        });
+                    });
+                    
+                    document.querySelectorAll('.decrease-item').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            const item = cart.find(item => item.id === id);
+                            if (item && item.quantity > 1) {
+                                item.quantity -= 1;
+                                updateCart();
+                            }
+                        });
+                    });
+                }
+                
+                // Update total
+                const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                cartTotal.innerHTML = `
+                    <span>Total:</span>
+                    <span>$${totalPrice.toFixed(2)}</span>
+                `;
+            }
+            
+            // Initialize cart
+            updateCart();
+        });
+    </script>
+</body>
+</html>
+
