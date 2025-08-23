@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Blog Layout</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #f72585;
+            --dark-bg: #121212;
+            --dark-text: #e0e0e0;
+            --dark-card: #1e1e1e;
+            --light-bg: #f8f9fa;
+            --light-text: #212529;
+            --light-card: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            transition: var(--transition);
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .blog-title {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            min-width: 250px;
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background: white;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Blog Grid */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .blog-post {
+            background: var(--light-card);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        body.dark-mode .blog-post {
+            background: var(--dark-card);
+        }
+
+        .blog-post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        body.dark-mode .post-image {
+            background: #2a2a2a;
+        }
+
+        .post-content {
+            padding: 1.5rem;
+        }
+
+        .post-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        body.dark-mode .post-meta {
+            color: #aaa;
+        }
+
+        .post-author {
+            font-weight: 500;
+        }
+
+        .post-date {
+            color: #999;
+        }
+
+        body.dark-mode .post-date {
+            color: #888;
+        }
+
+        .post-excerpt {
+            margin-bottom: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        body.dark-mode .post-excerpt {
+            color: #ccc;
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tag:hover {
+            background: var(--secondary-color);
+        }
+
+        .read-more {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .read-more:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* No results message */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            background: var(--light-card);
+            border-radius: var(--border-radius);
+        }
+
+        body.dark-mode .no-results {
+            background: var(--dark-card);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .search-container {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .search-input {
+                min-width: 200px;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .blog-title {
+                font-size: 2rem;
+            }
+
+            .search-input,
+            .filter-select {
+                width: 100%;
+            }
+
+            .post-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1 class="blog-title">Tech Insights Blog</h1>
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search blog posts...">
+                    <select class="filter-select" id="categoryFilter">
+                        <option value="all">All Categories</option>
+                        <option value="web-dev">Web Development</option>
+                        <option value="ai">Artificial Intelligence</option>
+                        <option value="cybersecurity">Cybersecurity</option>
+                        <option value="cloud">Cloud Computing</option>
+                    </select>
+                    <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="blog-grid" id="blogGrid">
+            <!-- Blog Post 1 -->
+            <article class="blog-post" data-category="web-dev">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/245f280f-1539-4a1c-9c7a-0a979c1c50e6.png" alt="Modern web development workspace with multiple monitors showing code editors and design tools" class="post-image">
+                <div class="post-content">
+                    <h2 class="post-title">The Future of Web Development in 2024</h2>
+                    <div class="post-meta">
+                        <span class="post-author">By Sarah Chen</span>
+                        <span class="post-date">December 15, 2023</span>
+                    </div>
+                    <p class="post-excerpt">
+                        Explore the latest trends in web development including serverless architecture, 
+                        Jamstack, and the rise of WebAssembly. Learn how these technologies are shaping 
+                        the future of web applications.
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag" data-category="web-dev">Web Development</span>
+                        <span class="tag" data-category="javascript">JavaScript</span>
+                    </div>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 2 -->
+            <article class="blog-post" data-category="ai">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2e3fa610-4c7a-4803-8ebf-53003b4adb92.png" alt="Futuristic AI neural network visualization with glowing connections and data points" class="post-image">
+                <div class="post-content">
+                    <h2 class="post-title">AI-Powered Development Tools Revolution</h2>
+                    <div class="post-meta">
+                        <span class="post-author">By Marcus Johnson</span>
+                        <span class="post-date">December 12, 2023</span>
+                    </div>
+                    <p class="post-excerpt">
+                        How artificial intelligence is transforming the way developers work. From code 
+                        completion to automated testing, discover the tools that are changing the 
+                        software development landscape.
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag" data-category="ai">AI</span>
+                        <span class="tag" data-category="development">Development</span>
+                    </div>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 3 -->
+            <article class="blog-post" data-category="cybersecurity">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2f41aeff-b56b-4fbb-becc-234ac29d3c35.png" alt="Cybersecurity operations center with multiple screens showing network security dashboards and threat detection" class="post-image">
+                <div class="post-content">
+                    <h2 class="post-title">Zero Trust Security Architecture</h2>
+                    <div class="post-meta">
+                        <span class="post-author">By Emily Rodriguez</span>
+                        <span class="post-date">December 10, 2023</span>
+                    </div>
+                    <p class="post-excerpt">
+                        Understanding the Zero Trust security model and why it's becoming essential 
+                        for modern organizations. Learn how to implement this approach to protect 
+                        your digital assets effectively.
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag" data-category="cybersecurity">Cybersecurity</span>
+                        <span class="tag" data-category="enterprise">Enterprise</span>
+                    </div>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 4 -->
+            <article class="blog-post" data-category="cloud">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e1a826a9-3d62-4844-b9c9-5b6859d822de.png" alt="Cloud computing infrastructure with server racks and network connections in a modern data center" class="post-image">
+                <div class="post-content">
+                    <h2 class="post-title">Multi-Cloud Strategy Best Practices</h2>
+                    <div class="post-meta">
+                        <span class="post-author">By David Kim</span>
+                        <span class="post-date">December 8, 2023</span>
+                    </div>
+                    <p class="post-excerpt">
+                        Mastering multi-cloud deployment strategies to optimize performance, reduce 
+                        costs, and enhance reliability. Real-world case studies and practical tips 
+                        for successful cloud management.
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag" data-category="cloud">Cloud</span>
+                        <span class="tag" data-category="devops">DevOps</span>
+                    </div>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 5 -->
+            <article class="blog-post" data-category="web-dev">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/35c7018b-82b9-4815-90f8-0cace340b0f3.png" alt="Responsive web design mockup showing multiple device screens with consistent user interface" class="post-image">
+                <div class="post-content">
+                    <h2 class="post-title">Building Responsive Web Applications</h2>
+                    <div class="post-meta">
+                        <span class="post-author">By Alex Turner</span>
+                        <span class="post-date">December 5, 2023</span>
+                    </div>
+                    <p class="post-excerpt">
+                        Advanced techniques for creating truly responsive web applications that work 
+                        flawlessly across all devices. Learn about CSS Grid, Flexbox, and modern 
+                        JavaScript approaches.
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag" data-category="web-dev">Web Development</span>
+                        <span class="tag" data-category="css">CSS</span>
+                        <span class="tag" data-category="responsive">Responsive</span>
+                    </div>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 6 -->
+            <article class="blog-post" data-category="ai">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/78ac5b44-c7ab-40db-ad4c-15431ed9f449.png" alt="Machine learning model training visualization with data points and decision boundaries" class="post-image">
+                <div class="post-content">
+                    <h2 class="post-title">Ethical AI Development Principles</h2>
+                    <div class="post-meta">
+                        <span class="post-author">By Lisa Wang</span>
+                        <span class="post-date">December 3, 2023</span>
+                    </div>
+                    <p class="post-excerpt">
+                        The importance of ethical considerations in AI development. Explore frameworks 
+                        and best practices for building responsible AI systems that benefit society 
+                        while minimizing potential harms.
+                    </p>
+                    <div class="post-tags">
+                        <span class="tag" data-category="ai">AI</span>
+                        <span class="tag" data-category="ethics">Ethics</span>
+                        <span class="tag" data-category="innovation">Innovation</span>
+                    </div>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2025 Tech Insights Blog. All rights reserved.</p>
+                <p>Built with ❤️ for the developer community</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const blogPosts = document.querySelectorAll('.blog-post');
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const themeToggle = document.getElementById('themeToggle');
+            const blogGrid = document.getElementById('blogGrid');
+
+            // Theme toggle functionality
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                themeToggle.textContent = document.body.classList.contains('dark-mode') 
+                    ? '☀️ Light Mode' 
+                    : '🌙 Dark Mode';
+            });
+
+            // Filter posts by search term and category
+            function filterPosts() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedCategory = categoryFilter.value;
+                let hasVisiblePosts = false;
+
+                blogPosts.forEach(post => {
+                    const title = post.querySelector('.post-title').textContent.toLowerCase();
+                    const excerpt = post.querySelector('.post-excerpt').textContent.toLowerCase();
+                    const postCategory = post.getAttribute('data-category');
+                    const tags = Array.from(post.querySelectorAll('.tag')).map(tag => 
+                        tag.textContent.toLowerCase()
+                    );
+
+                    const matchesSearch = title.includes(searchTerm) || 
+                                        excerpt.includes(searchTerm) ||
+                                        tags.some(tag => tag.includes(searchTerm));
+                    
+                    const matchesCategory = selectedCategory === 'all' || 
+                                           postCategory === selectedCategory;
+
+                    if (matchesSearch && matchesCategory) {
+                        post.style.display = 'block';
+                        hasVisiblePosts = true;
+                    } else {
+                        post.style.display = 'none';
+                    }
+                });
+
+                // Show no results message if no posts match
+                let noResultsMessage = document.querySelector('.no-results');
+                if (!hasVisiblePosts) {
+                    if (!noResultsMessage) {
+                        noResultsMessage = document.createElement('div');
+                        noResultsMessage.className = 'no-results';
+                        noResultsMessage.innerHTML = `
+                            <h3>No posts found</h3>
+                            <p>Try adjusting your search terms or select a different category.</p>
+                        `;
+                        blogGrid.appendChild(noResultsMessage);
+                    }
+                } else if (noResultsMessage) {
+                    noResultsMessage.remove();
+                }
+            }
+
+            // Event listeners for filtering
+            searchInput.addEventListener('input', filterPosts);
+            categoryFilter.addEventListener('change', filterPosts);
+
+            // Add click event to tags for filtering
+            document.querySelectorAll('.tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    categoryFilter.value = category;
+                    filterPosts();
+                });
+            });
+
+            // Initialize with all posts visible
+            filterPosts();
+        });
+    </script>
+</body>
+</html>
+
